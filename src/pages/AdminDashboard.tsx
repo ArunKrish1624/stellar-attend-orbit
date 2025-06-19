@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { LogOut, Users, Clock, TrendingUp, Award } from 'lucide-react';
+import { LogOut, Users, Clock, TrendingUp, Award, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import ThreeBackground from '@/components/ThreeBackground';
 import { mockEmployees, initialAttendanceRecords, Employee, AttendanceRecord } from '@/data/mockEmployees';
@@ -41,6 +41,35 @@ const AdminDashboard = () => {
     }
   };
 
+  const downloadAttendanceReport = () => {
+    const currentDate = new Date().toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    let csvContent = `Attendance Report - ${currentDate}\n\n`;
+    csvContent += 'Employee ID,Employee Name,Position,Department,Email,Check In Time,Check Out Time,Status\n';
+
+    mockEmployees.forEach(employee => {
+      const attendance = getAttendanceRecord(employee.id);
+      csvContent += `${employee.id},${employee.name},${employee.position},${employee.department},${employee.email},${attendance?.checkInTime || 'N/A'},${attendance?.checkOutTime || 'N/A'},${attendance?.status || 'Absent'}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `attendance_report_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast.success('Attendance report downloaded successfully!');
+  };
+
   const totalEmployees = mockEmployees.length;
   const presentEmployees = attendanceRecords.filter(record => record.status === 'present').length;
   const checkedOutEmployees = attendanceRecords.filter(record => record.status === 'checked-out').length;
@@ -58,21 +87,30 @@ const AdminDashboard = () => {
               <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
               <p className="text-gray-600">Employee Management System</p>
             </div>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="flex items-center space-x-2"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Logout</span>
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Button
+                onClick={downloadAttendanceReport}
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download Report
+              </Button>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="flex items-center space-x-2 rounded-xl"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </Button>
+            </div>
           </div>
         </header>
 
         <main className="container mx-auto px-4 py-8 space-y-8">
           {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="bg-white shadow-lg border-0">
+            <Card className="bg-white shadow-lg border-0 rounded-2xl">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -86,7 +124,7 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white shadow-lg border-0">
+            <Card className="bg-white shadow-lg border-0 rounded-2xl">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -100,7 +138,7 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white shadow-lg border-0">
+            <Card className="bg-white shadow-lg border-0 rounded-2xl">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -114,7 +152,7 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white shadow-lg border-0">
+            <Card className="bg-white shadow-lg border-0 rounded-2xl">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -130,7 +168,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Employee Table */}
-          <Card className="bg-white shadow-lg border-0">
+          <Card className="bg-white shadow-lg border-0 rounded-2xl">
             <CardHeader>
               <CardTitle className="text-xl font-bold text-gray-900">Employee Attendance Details</CardTitle>
             </CardHeader>

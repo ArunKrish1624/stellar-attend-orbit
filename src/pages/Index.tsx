@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,21 @@ const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCheckingIn, setIsCheckingIn] = useState(true);
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>(initialAttendanceRecords);
+
+  const getIndianTime = () => {
+    return new Date().toLocaleTimeString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  const getIndianDate = () => {
+    return new Date().toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata'
+    });
+  };
 
   const handleAttendanceAction = (checkIn: boolean) => {
     if (!employeeId.trim()) {
@@ -50,7 +66,7 @@ const Index = () => {
   const confirmAttendance = () => {
     if (!selectedEmployee) return;
 
-    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const currentTime = getIndianTime();
     
     setAttendanceRecords(prev => {
       const existingIndex = prev.findIndex(record => record.employeeId === selectedEmployee.id);
@@ -124,8 +140,8 @@ const Index = () => {
               <div className="flex items-center space-x-4 text-gray-600">
                 <Clock className="w-5 h-5" />
                 <div className="text-right">
-                  <p className="text-sm font-medium">{new Date().toLocaleDateString()}</p>
-                  <p className="text-xs text-gray-500">{new Date().toLocaleTimeString()}</p>
+                  <p className="text-sm font-medium">{getIndianDate()}</p>
+                  <p className="text-xs text-gray-500">{getIndianTime()}</p>
                 </div>
               </div>
             </div>
