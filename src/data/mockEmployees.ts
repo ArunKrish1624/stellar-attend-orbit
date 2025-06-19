@@ -19,7 +19,7 @@ export interface AttendanceRecord {
 export const mockEmployees: Employee[] = [
   {
     id: 'EMP001',
-    name: 'Sarah Johnson',
+    name: 'Sneha Raj',
     position: 'Senior Epub Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face',
@@ -27,7 +27,7 @@ export const mockEmployees: Employee[] = [
   },
   {
     id: 'EMP002',
-    name: 'Michael Chen',
+    name: 'Vasuki',
     position: 'Xml Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face',
@@ -35,7 +35,7 @@ export const mockEmployees: Employee[] = [
   },
   {
     id: 'EMP003',
-    name: 'Emily Rodriguez',
+    name: 'Dileepan',
     position: 'Lead Epub Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face',
@@ -43,7 +43,7 @@ export const mockEmployees: Employee[] = [
   },
   {
     id: 'EMP004',
-    name: 'David Kim',
+    name: 'Thinakaran',
     position: 'Senior Xml Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=150&h=150&fit=crop&crop=face',
@@ -51,7 +51,7 @@ export const mockEmployees: Employee[] = [
   },
   {
     id: 'EMP005',
-    name: 'Lisa Thompson',
+    name: 'Arun',
     position: 'Epub Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=150&h=150&fit=crop&crop=face',
