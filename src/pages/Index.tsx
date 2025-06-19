@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,30 @@ const Index = () => {
     });
   };
 
+  const getCurrentIndianHour = () => {
+    const now = new Date();
+    return now.toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      hour12: false
+    });
+  };
+
+  const isCheckInTimeAllowed = () => {
+    const currentHour = parseInt(getCurrentIndianHour());
+    return currentHour >= 9 && currentHour < 15; // 9:00 AM to 2:59 PM (before 3:00 PM)
+  };
+
+  const getCheckInTimeMessage = () => {
+    const currentHour = parseInt(getCurrentIndianHour());
+    if (currentHour < 9) {
+      return 'Check-in will be available from 9:00 AM';
+    } else if (currentHour >= 15) {
+      return 'Check-in time has ended (available only till 3:00 PM)';
+    }
+    return '';
+  };
+
   const handleAttendanceAction = (checkIn: boolean) => {
     if (!employeeId.trim()) {
       toast.error('Please enter your Employee ID');
@@ -58,12 +83,16 @@ const Index = () => {
     );
     
     if (checkIn) {
-      if (existingRecord && existingRecord.status === 'present') {
-        toast.error('You have already checked in today!');
+      // Check if check-in time is allowed
+      if (!isCheckInTimeAllowed()) {
+        const timeMessage = getCheckInTimeMessage();
+        toast.error(timeMessage);
         return;
       }
-      if (existingRecord && existingRecord.status === 'checked-out') {
-        toast.error('You have already completed your attendance for today!');
+
+      // Check if already checked in today
+      if (existingRecord && (existingRecord.status === 'present' || existingRecord.status === 'checked-out')) {
+        toast.error('You have already checked in today! Only one check-in per day is allowed.');
         return;
       }
     } else {
@@ -136,6 +165,9 @@ const Index = () => {
     }
   };
 
+  const checkInAllowed = isCheckInTimeAllowed();
+  const timeMessage = getCheckInTimeMessage();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 relative">
       <ThreeBackground />
@@ -196,10 +228,25 @@ const Index = () => {
                 />
               </div>
               
+              {/* Time Restriction Notice */}
+              {!checkInAllowed && (
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+                  <p className="text-yellow-800 text-sm font-medium text-center">
+                    <Clock className="w-4 h-4 inline mr-2" />
+                    {timeMessage}
+                  </p>
+                </div>
+              )}
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Button
                   onClick={() => handleAttendanceAction(true)}
-                  className="h-14 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  disabled={!checkInAllowed}
+                  className={`h-14 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all ${
+                    checkInAllowed 
+                      ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700' 
+                      : 'bg-gray-400 cursor-not-allowed'
+                  }`}
                 >
                   <LogIn className="w-6 h-6 mr-3" />
                   Check In
@@ -213,9 +260,12 @@ const Index = () => {
                 </Button>
               </div>
 
-              <div className="text-center p-4 bg-gray-50 rounded-xl">
+              <div className="text-center p-4 bg-gray-50 rounded-xl space-y-2">
                 <p className="text-sm text-gray-600">
                   <strong>Demo Employee IDs:</strong> EMP001, EMP002, EMP003, EMP004, EMP005
+                </p>
+                <p className="text-xs text-gray-500">
+                  Check-in available: 9:00 AM - 3:00 PM (IST)
                 </p>
               </div>
             </CardContent>
