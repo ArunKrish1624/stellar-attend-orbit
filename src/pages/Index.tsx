@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -32,6 +31,15 @@ const Index = () => {
     });
   };
 
+  const getTodayDateString = () => {
+    return new Date().toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
   const handleAttendanceAction = (checkIn: boolean) => {
     if (!employeeId.trim()) {
       toast.error('Please enter your Employee ID');
@@ -44,11 +52,18 @@ const Index = () => {
       return;
     }
 
-    const existingRecord = attendanceRecords.find(record => record.employeeId === employee.id);
+    const todayDate = getTodayDateString();
+    const existingRecord = attendanceRecords.find(record => 
+      record.employeeId === employee.id && record.date === todayDate
+    );
     
     if (checkIn) {
       if (existingRecord && existingRecord.status === 'present') {
-        toast.error('You are already checked in!');
+        toast.error('You have already checked in today!');
+        return;
+      }
+      if (existingRecord && existingRecord.status === 'checked-out') {
+        toast.error('You have already completed your attendance for today!');
         return;
       }
     } else {
@@ -67,16 +82,20 @@ const Index = () => {
     if (!selectedEmployee) return;
 
     const currentTime = getIndianTime();
+    const todayDate = getTodayDateString();
     
     setAttendanceRecords(prev => {
-      const existingIndex = prev.findIndex(record => record.employeeId === selectedEmployee.id);
+      const existingIndex = prev.findIndex(record => 
+        record.employeeId === selectedEmployee.id && record.date === todayDate
+      );
       
       if (isCheckingIn) {
         const newRecord: AttendanceRecord = {
           employeeId: selectedEmployee.id,
           checkInTime: currentTime,
           checkOutTime: null,
-          status: 'present'
+          status: 'present',
+          date: todayDate
         };
         
         if (existingIndex >= 0) {

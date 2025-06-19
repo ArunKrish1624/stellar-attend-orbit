@@ -1,3 +1,4 @@
+
 import { Clock, User, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,6 +8,7 @@ interface AttendanceRecord {
   checkInTime: string | null;
   checkOutTime: string | null;
   status: 'present' | 'absent' | 'checked-out';
+  date: string;
 }
 
 interface Employee {
@@ -25,8 +27,20 @@ interface EmployeeListProps {
 }
 
 const EmployeeList = ({ employees, attendanceRecords, onCheckOut }: EmployeeListProps) => {
+  const getTodayDateString = () => {
+    return new Date().toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
   const getAttendanceRecord = (employeeId: string) => {
-    return attendanceRecords.find(record => record.employeeId === employeeId);
+    const todayDate = getTodayDateString();
+    return attendanceRecords.find(record => 
+      record.employeeId === employeeId && record.date === todayDate
+    );
   };
 
   const getStatusColor = (status: string) => {

@@ -13,6 +13,7 @@ export interface AttendanceRecord {
   checkInTime: string | null;
   checkOutTime: string | null;
   status: 'present' | 'absent' | 'checked-out';
+  date: string;
 }
 
 export const mockEmployees: Employee[] = [
@@ -58,17 +59,28 @@ export const mockEmployees: Employee[] = [
   }
 ];
 
+const getTodayDateString = () => {
+  return new Date().toLocaleDateString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+};
+
 export const initialAttendanceRecords: AttendanceRecord[] = [
   {
     employeeId: 'EMP001',
     checkInTime: '09:15 AM',
     checkOutTime: null,
-    status: 'present'
+    status: 'present',
+    date: getTodayDateString()
   },
   {
     employeeId: 'EMP002',
     checkInTime: '08:45 AM',
     checkOutTime: '05:30 PM',
-    status: 'checked-out'
+    status: 'checked-out',
+    date: getTodayDateString()
   }
 ];
