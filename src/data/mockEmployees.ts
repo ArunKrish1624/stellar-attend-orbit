@@ -19,7 +19,7 @@ export interface AttendanceRecord {
 export const mockEmployees: Employee[] = [
   {
     id: 'EMP001',
-    name: 'Sneha Raj',
+    name: 'Sneha',
     position: 'Senior Epub Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face',
