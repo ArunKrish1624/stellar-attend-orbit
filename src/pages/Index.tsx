@@ -183,7 +183,7 @@ const Index = () => {
                     <Building2 className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold text-gray-900">WorkSpace</h1>
+                    <h1 className="text-xl font-bold text-gray-900">NK Data Solutions</h1>
                     <p className="text-sm text-gray-500">Attendance Management</p>
                   </div>
                 </div>
