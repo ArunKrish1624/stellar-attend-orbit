@@ -180,7 +180,7 @@ const Index = () => {
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-white to-green-500 rounded-xl flex items-center justify-center">
-                    <Building2 className="w-6 h-6 text-black" />
+                    <Building2 className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h1 className="text-xl font-bold text-gray-900">NK Data Solutions</h1>
