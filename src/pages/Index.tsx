@@ -199,7 +199,7 @@ const Index = () => {
           </div>
         </header>
 
-        <main className="container mx-auto px-4 py-8 space-y-8">
+        <main className="container flex px-4 py-8 space-y-8">
           {/* Hero Section */}
           <div className="text-center space-y-4 py-8">
             <h2 className="text-4xl font-bold text-gray-900">
