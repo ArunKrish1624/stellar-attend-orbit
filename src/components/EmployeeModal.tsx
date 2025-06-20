@@ -1,7 +1,9 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { Clock, User, IdCard, MapPin, Calendar } from 'lucide-react';
+import { useState } from 'react';
 
 interface Employee {
   id: string;
@@ -16,11 +18,13 @@ interface EmployeeModalProps {
   employee: Employee | null;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (dailyReport?: string) => void;
   isCheckingIn: boolean;
 }
 
 const EmployeeModal = ({ employee, isOpen, onClose, onConfirm, isCheckingIn }: EmployeeModalProps) => {
+  const [dailyReport, setDailyReport] = useState('');
+
   if (!employee) return null;
 
   const getIndianTime = () => {
@@ -42,8 +46,21 @@ const EmployeeModal = ({ employee, isOpen, onClose, onConfirm, isCheckingIn }: E
     });
   };
 
+  const handleConfirm = () => {
+    if (!isCheckingIn && !dailyReport.trim()) {
+      return; // Don't allow checkout without daily report
+    }
+    onConfirm(isCheckingIn ? undefined : dailyReport);
+    setDailyReport(''); // Reset the report after confirmation
+  };
+
+  const handleClose = () => {
+    setDailyReport(''); // Reset the report when closing
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg bg-white border-0 shadow-2xl rounded-3xl overflow-hidden">
         {/* Header with gradient background */}
         <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 -m-6 mb-3">
@@ -109,6 +126,24 @@ const EmployeeModal = ({ employee, isOpen, onClose, onConfirm, isCheckingIn }: E
             </div>
           </div>
 
+          {/* Daily Report for Checkout */}
+          {!isCheckingIn && (
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Daily Work Report</h3>
+              <p className="text-sm text-gray-600 mb-3">Please describe your work activities for today:</p>
+              <Textarea
+                value={dailyReport}
+                onChange={(e) => setDailyReport(e.target.value)}
+                placeholder="Enter your daily work report here... (Required for checkout)"
+                className="min-h-[100px] resize-none border-2 border-yellow-300 focus:border-yellow-500"
+                required
+              />
+              {!dailyReport.trim() && (
+                <p className="text-red-500 text-xs mt-2">Daily report is required to check out</p>
+              )}
+            </div>
+          )}
+
           {/* Date and Time */}
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-6 text-center border border-indigo-100">
             <div className="flex items-center justify-center mb-2">
@@ -125,17 +160,20 @@ const EmployeeModal = ({ employee, isOpen, onClose, onConfirm, isCheckingIn }: E
           {/* Action Buttons */}
           <div className="flex space-x-4 pt-2">
             <Button
-              onClick={onClose}
+              onClick={handleClose}
               variant="outline"
               className="flex-1 h-12 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl font-semibold"
             >
               Cancel
             </Button>
             <Button
-              onClick={onConfirm}
+              onClick={handleConfirm}
+              disabled={!isCheckingIn && !dailyReport.trim()}
               className={`flex-1 h-12 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all ${
                 isCheckingIn 
                   ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700' 
+                  : !dailyReport.trim()
+                  ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
               }`}
             >

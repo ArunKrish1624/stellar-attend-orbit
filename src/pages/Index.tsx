@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,16 @@ import { toast } from 'sonner';
 import ThreeBackground from '@/components/ThreeBackground';
 import EmployeeModal from '@/components/EmployeeModal';
 import EmployeeList from '@/components/EmployeeList';
-import { mockEmployees, initialAttendanceRecords, Employee, AttendanceRecord } from '@/data/mockEmployees';
+import { mockEmployees, initialAttendanceRecords, Employee } from '@/data/mockEmployees';
+
+interface AttendanceRecord {
+  employeeId: string;
+  checkInTime: string | null;
+  checkOutTime: string | null;
+  status: 'present' | 'absent' | 'checked-out';
+  date: string;
+  dailyReport?: string;
+}
 
 const Index = () => {
     const [employeeId, setEmployeeId] = useState('');
@@ -107,7 +115,7 @@ const Index = () => {
         setIsModalOpen(true);
     };
 
-    const confirmAttendance = () => {
+    const confirmAttendance = (dailyReport?: string) => {
         if (!selectedEmployee) return;
 
         const currentTime = getIndianTime();
@@ -135,13 +143,14 @@ const Index = () => {
                     return [...prev, newRecord];
                 }
             } else {
-                // Check out
+                // Check out with daily report
                 if (existingIndex >= 0) {
                     const updated = [...prev];
                     updated[existingIndex] = {
                         ...updated[existingIndex],
                         checkOutTime: currentTime,
-                        status: 'checked-out'
+                        status: 'checked-out',
+                        dailyReport: dailyReport
                     };
                     return updated;
                 }
