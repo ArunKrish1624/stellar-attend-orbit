@@ -209,7 +209,7 @@ const Index = () => {
                             Track your time, manage your presence, and excel in your career with our modern attendance system
                         </p>
                     </div>
-                    <div className="  flex flex-col md:flex-row justify-evenly items-start gap-8 p-4">
+                    <div className="  flex flex-col md:flex-row justify-evenly items-start p-4">
                         {/* Attendance Card */}
                         <Card className="max-w-2xl bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
                             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
