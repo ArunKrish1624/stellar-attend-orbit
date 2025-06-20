@@ -300,6 +300,7 @@ const AdminDashboard = () => {
           isOpen={isAddEmployeeModalOpen}
           onClose={() => setIsAddEmployeeModalOpen(false)}
           onAddEmployee={handleAddEmployee}
+          employees={employees}
         />
 
         {/* Edit Employee Modal */}

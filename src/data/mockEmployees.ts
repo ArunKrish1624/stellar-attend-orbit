@@ -20,7 +20,7 @@ export interface AttendanceRecord {
 
 export const mockEmployees: Employee[] = [
   {
-    id: 'EMP001',
+    id: 'NK001',
     name: 'Sneha',
     position: 'Senior Epub Developer',
     department: 'Content Development',
@@ -30,7 +30,7 @@ export const mockEmployees: Employee[] = [
     degree: 'B.Tech Computer Science'
   },
   {
-    id: 'EMP002',
+    id: 'NK002',
     name: 'Vasuki',
     position: 'Xml Developer',
     department: 'Content Development',
@@ -40,7 +40,7 @@ export const mockEmployees: Employee[] = [
     degree: 'B.Sc Information Technology'
   },
   {
-    id: 'EMP003',
+    id: 'NK003',
     name: 'Dileepan',
     position: 'Lead Epub Developer',
     department: 'Content Development',
@@ -50,7 +50,7 @@ export const mockEmployees: Employee[] = [
     degree: 'M.Tech Software Engineering'
   },
   {
-    id: 'EMP004',
+    id: 'NK004',
     name: 'Thinakaran',
     position: 'Senior Xml Developer',
     department: 'Content Development',
@@ -60,7 +60,7 @@ export const mockEmployees: Employee[] = [
     degree: 'B.E Electronics'
   },
   {
-    id: 'EMP005',
+    id: 'NK005',
     name: 'Arun',
     position: 'Epub Developer',
     department: 'Content Development',
@@ -82,14 +82,14 @@ const getTodayDateString = () => {
 
 export const initialAttendanceRecords: AttendanceRecord[] = [
   {
-    employeeId: 'EMP001',
+    employeeId: 'NK001',
     checkInTime: '09:15 AM',
     checkOutTime: null,
     status: 'present',
     date: getTodayDateString()
   },
   {
-    employeeId: 'EMP002',
+    employeeId: 'NK002',
     checkInTime: '08:45 AM',
     checkOutTime: '05:30 PM',
     status: 'checked-out',

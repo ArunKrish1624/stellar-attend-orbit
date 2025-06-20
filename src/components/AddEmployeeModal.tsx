@@ -6,14 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
+import { Employee } from '@/data/mockEmployees';
 
 interface AddEmployeeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddEmployee: (employee: any) => void;
+  employees: Employee[];
 }
 
-const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalProps) => {
+const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee, employees }: AddEmployeeModalProps) => {
   const [formData, setFormData] = useState({
     name: '',
     position: '',
@@ -49,9 +51,15 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
   };
 
   const generateEmployeeId = () => {
-    const timestamp = Date.now().toString().slice(-4);
-    const random = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-    return `EMP${timestamp}${random}`;
+    // Find the highest existing NK number
+    const existingNumbers = employees
+      .map(emp => emp.id)
+      .filter(id => id.startsWith('NK'))
+      .map(id => parseInt(id.substring(2)))
+      .filter(num => !isNaN(num));
+    
+    const nextNumber = existingNumbers.length > 0 ? Math.max(...existingNumbers) + 1 : 1;
+    return `NK${nextNumber.toString().padStart(3, '0')}`;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
