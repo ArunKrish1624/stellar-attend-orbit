@@ -67,7 +67,7 @@ const EmployeeList = ({ employees, attendanceRecords, onCheckOut }: EmployeeList
           return (
             <Card key={employee.id} className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
-                <div className="flex items-center space-y-2 justify-between">
+                <div className="flex items-center space-x-2 justify-between">
                   {/* Employee Info */}
                   <div className="flex items-center gap-2 space-x-4">
                     <div className="relative">
