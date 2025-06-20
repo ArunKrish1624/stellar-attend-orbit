@@ -52,9 +52,9 @@ const EmployeeList = ({ employees, attendanceRecords, onCheckOut }: EmployeeList
   };
 
   return (
-    <div className="space-y-6 mx-auto">
+    <div className="space-y-6 mx-auto ">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Today's Attendance</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2 mt-4">Today's Attendance</h2>
         <p className="text-gray-600">Real-time employee presence tracking</p>
       </div>
 
