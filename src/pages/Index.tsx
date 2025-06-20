@@ -189,10 +189,10 @@ const Index = () => {
                                 </div>
                             </div>
                             <div className="flex items-center space-x-4 text-gray-600">
-                                <Clock className="w-5 h-5" />
+                                <Clock className="w-15 h-15" />
                                 <div className="text-right">
-                                    <p className="text-sm font-medium">{getIndianDate()}</p>
-                                    <p className="text-xs text-gray-500">{getIndianTime()}</p>
+                                    <p className="text-lg font-medium">{getIndianDate()}</p>
+                                    <p className="text-base text-gray-500">{getIndianTime()}</p>
                                 </div>
                             </div>
                         </div>
