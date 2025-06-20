@@ -199,7 +199,7 @@ const Index = () => {
           </div>
         </header>
 
-        <main className="container flex px-4 py-8 space-y-8">
+        <main className="container mx-auto px-4 py-8 space-y-8">
           {/* Hero Section */}
           <div className="text-center space-y-4 py-8">
             <h2 className="text-4xl font-bold text-gray-900">
@@ -209,7 +209,8 @@ const Index = () => {
               Track your time, manage your presence, and excel in your career with our modern attendance system
             </p>
           </div>
-
+    `     
+          <div className="container flex" >
           {/* Attendance Card */}
           <Card className="max-w-2xl mx-auto bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
@@ -277,8 +278,6 @@ const Index = () => {
             attendanceRecords={attendanceRecords}
             onCheckOut={handleQuickCheckOut}
           />
-        </main>
-
         {/* Employee Modal */}
         <EmployeeModal
           employee={selectedEmployee}
@@ -287,6 +286,8 @@ const Index = () => {
           onConfirm={confirmAttendance}
           isCheckingIn={isCheckingIn}
         />
+            </div>
+          </main>
       </div>
     </div>
   );
