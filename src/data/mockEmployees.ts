@@ -6,6 +6,8 @@ export interface Employee {
   department: string;
   photo: string;
   email: string;
+  phone?: string;
+  degree?: string;
 }
 
 export interface AttendanceRecord {
@@ -23,7 +25,9 @@ export const mockEmployees: Employee[] = [
     position: 'Senior Epub Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face',
-    email: 'sarah.johnson@company.com'
+    email: 'sarah.johnson@company.com',
+    phone: '+91 9876543210',
+    degree: 'B.Tech Computer Science'
   },
   {
     id: 'EMP002',
@@ -31,7 +35,9 @@ export const mockEmployees: Employee[] = [
     position: 'Xml Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face',
-    email: 'michael.chen@company.com'
+    email: 'michael.chen@company.com',
+    phone: '+91 9876543211',
+    degree: 'B.Sc Information Technology'
   },
   {
     id: 'EMP003',
@@ -39,7 +45,9 @@ export const mockEmployees: Employee[] = [
     position: 'Lead Epub Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face',
-    email: 'emily.rodriguez@company.com'
+    email: 'emily.rodriguez@company.com',
+    phone: '+91 9876543212',
+    degree: 'M.Tech Software Engineering'
   },
   {
     id: 'EMP004',
@@ -47,7 +55,9 @@ export const mockEmployees: Employee[] = [
     position: 'Senior Xml Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=150&h=150&fit=crop&crop=face',
-    email: 'david.kim@company.com'
+    email: 'david.kim@company.com',
+    phone: '+91 9876543213',
+    degree: 'B.E Electronics'
   },
   {
     id: 'EMP005',
@@ -55,7 +65,9 @@ export const mockEmployees: Employee[] = [
     position: 'Epub Developer',
     department: 'Content Development',
     photo: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=150&h=150&fit=crop&crop=face',
-    email: 'lisa.thompson@company.com'
+    email: 'lisa.thompson@company.com',
+    phone: '+91 9876543214',
+    degree: 'BCA'
   }
 ];
 

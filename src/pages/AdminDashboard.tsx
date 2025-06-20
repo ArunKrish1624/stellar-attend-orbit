@@ -4,14 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { LogOut, Users, Clock, TrendingUp, Award, Download } from 'lucide-react';
+import { LogOut, Users, Clock, TrendingUp, Award, Download, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import ThreeBackground from '@/components/ThreeBackground';
+import AddEmployeeModal from '@/components/AddEmployeeModal';
 import { mockEmployees, initialAttendanceRecords, Employee, AttendanceRecord } from '@/data/mockEmployees';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [attendanceRecords] = useState<AttendanceRecord[]>(initialAttendanceRecords);
+  const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
+  const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('adminAuthenticated');
@@ -24,6 +27,10 @@ const AdminDashboard = () => {
     localStorage.removeItem('adminAuthenticated');
     toast.success('Logged out successfully');
     navigate('/');
+  };
+
+  const handleAddEmployee = (newEmployee: Employee) => {
+    setEmployees(prev => [...prev, newEmployee]);
   };
 
   const getAttendanceRecord = (employeeId: string) => {
@@ -52,7 +59,7 @@ const AdminDashboard = () => {
     let csvContent = `Attendance Report - ${currentDate}\n\n`;
     csvContent += 'Employee ID,Employee Name,Position,Department,Email,Check In Time,Check Out Time,Status\n';
 
-    mockEmployees.forEach(employee => {
+    employees.forEach(employee => {
       const attendance = getAttendanceRecord(employee.id);
       csvContent += `${employee.id},${employee.name},${employee.position},${employee.department},${employee.email},${attendance?.checkInTime || 'N/A'},${attendance?.checkOutTime || 'N/A'},${attendance?.status || 'Absent'}\n`;
     });
@@ -70,7 +77,7 @@ const AdminDashboard = () => {
     toast.success('Attendance report downloaded successfully!');
   };
 
-  const totalEmployees = mockEmployees.length;
+  const totalEmployees = employees.length;
   const presentEmployees = attendanceRecords.filter(record => record.status === 'present').length;
   const checkedOutEmployees = attendanceRecords.filter(record => record.status === 'checked-out').length;
   const attendanceRate = Math.round(((presentEmployees + checkedOutEmployees) / totalEmployees) * 100);
@@ -88,6 +95,13 @@ const AdminDashboard = () => {
               <p className="text-gray-600">Employee Management System</p>
             </div>
             <div className="flex items-center space-x-4">
+              <Button
+                onClick={() => setIsAddEmployeeModalOpen(true)}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                Add Employee
+              </Button>
               <Button
                 onClick={downloadAttendanceReport}
                 className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
@@ -185,7 +199,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockEmployees.map((employee) => {
+                  {employees.map((employee) => {
                     const attendance = getAttendanceRecord(employee.id);
                     return (
                       <TableRow key={employee.id}>
@@ -225,6 +239,13 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
         </main>
+
+        {/* Add Employee Modal */}
+        <AddEmployeeModal
+          isOpen={isAddEmployeeModalOpen}
+          onClose={() => setIsAddEmployeeModalOpen(false)}
+          onAddEmployee={handleAddEmployee}
+        />
       </div>
     </div>
   );
