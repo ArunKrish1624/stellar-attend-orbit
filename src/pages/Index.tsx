@@ -210,9 +210,9 @@ const Index = () => {
             </p>
           </div>
     `     
-          <div className="container flex justify-between" >
+          <div className="container mx-auto flex flex-col md:flex-row justify-between items-start gap-8 p-4">
           {/* Attendance Card */}
-          <Card className="max-w-2xl mx-auto bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
+          <Card className="max-w-2xl bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
               <CardTitle className="text-2xl font-bold text-white text-center">
                 Employee Check-In/Out
