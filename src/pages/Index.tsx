@@ -221,7 +221,7 @@ const Index = () => {
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
-                  placeholder="Enter your Employee ID (e.g., EMP001)"
+                  placeholder="Enter your Employee ID (e.g., NK001)"
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
                   className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl"
@@ -262,7 +262,7 @@ const Index = () => {
 
               <div className="text-center p-4 bg-gray-50 rounded-xl space-y-2">
                 <p className="text-sm text-gray-600">
-                  <strong>Demo Employee IDs:</strong> EMP001, EMP002, EMP003, EMP004, EMP005
+                  <strong>Demo Employee IDs:</strong> NK001, NK002, NK003, NK004, NK005
                 </p>
                 <p className="text-xs text-gray-500">
                   Check-in available: 9:00 AM - 3:00 PM (IST)
