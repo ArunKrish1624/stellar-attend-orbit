@@ -46,7 +46,7 @@ const EmployeeModal = ({ employee, isOpen, onClose, onConfirm, isCheckingIn }: E
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg bg-white border-0 shadow-2xl rounded-3xl overflow-hidden">
         {/* Header with gradient background */}
-        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 -m-6 mb-6">
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 -m-6 mb-3">
           <DialogTitle className="text-2xl font-bold text-center text-white mb-2">
             {isCheckingIn ? 'Check In Confirmation' : 'Check Out Confirmation'}
           </DialogTitle>
@@ -55,7 +55,7 @@ const EmployeeModal = ({ employee, isOpen, onClose, onConfirm, isCheckingIn }: E
           </p>
         </div>
         
-        <div className="space-y-6 px-2">
+        <div className="space-y-5 px-2">
           {/* Employee Photo and Status */}
           <div className="flex justify-center">
             <div className="relative">
