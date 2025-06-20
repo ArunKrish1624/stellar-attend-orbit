@@ -104,7 +104,7 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
           {/* Photo Upload */}
           <div className="space-y-2">
             <Label htmlFor="photo">Employee Photo</Label>
-            <div className="flex flex-col items-center space-x-4">
+            <div className="flex flex-col items-center space-x-4 space-y-4">
               {formData.photo && (
                 <img
                   src={formData.photo}
