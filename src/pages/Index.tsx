@@ -210,7 +210,7 @@ const Index = () => {
             </p>
           </div>
     `     
-          <div className="container flex" >
+          <div className="container flex justify-between" >
           {/* Attendance Card */}
           <Card className="max-w-2xl mx-auto bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
