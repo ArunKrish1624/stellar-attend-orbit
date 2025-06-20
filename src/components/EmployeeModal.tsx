@@ -44,7 +44,7 @@ const EmployeeModal = ({ employee, isOpen, onClose, onConfirm, isCheckingIn }: E
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-white border-0 shadow-2xl rounded-3xl overflow-hidden">
+      <DialogContent className="sm:max-w-lg bg-white border-0 shadow-2xl rounded-3xl overflow-hidden max-h-[90vh] overflow-y-auto">
         {/* Header with gradient background */}
         <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 -m-6 mb-6">
           <DialogTitle className="text-2xl font-bold text-center text-white mb-2">
