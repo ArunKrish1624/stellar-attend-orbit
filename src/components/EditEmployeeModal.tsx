@@ -1,19 +1,21 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UserPlus } from 'lucide-react';
+import { Edit } from 'lucide-react';
 import { toast } from 'sonner';
+import { Employee } from '@/data/mockEmployees';
 
-interface AddEmployeeModalProps {
+interface EditEmployeeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddEmployee: (employee: any) => void;
+  onUpdateEmployee: (employee: Employee) => void;
+  employee: Employee | null;
 }
 
-const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalProps) => {
+const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: EditEmployeeModalProps) => {
   const [formData, setFormData] = useState({
     name: '',
     position: '',
@@ -24,7 +26,19 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
     photo: ''
   });
 
-  const [generatedId, setGeneratedId] = useState('');
+  useEffect(() => {
+    if (employee) {
+      setFormData({
+        name: employee.name,
+        position: employee.position,
+        department: employee.department,
+        phone: employee.phone || '',
+        email: employee.email,
+        degree: employee.degree || '',
+        photo: employee.photo
+      });
+    }
+  }, [employee]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -48,12 +62,6 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
     }
   };
 
-  const generateEmployeeId = () => {
-    const timestamp = Date.now().toString().slice(-4);
-    const random = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-    return `EMP${timestamp}${random}`;
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -62,45 +70,33 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
       return;
     }
 
-    const employeeId = generateEmployeeId();
-    setGeneratedId(employeeId);
+    if (!employee) return;
 
-    const newEmployee = {
-      id: employeeId,
+    const updatedEmployee: Employee = {
+      ...employee,
       name: formData.name,
       position: formData.position,
       department: formData.department,
       phone: formData.phone,
-      email: formData.email || `${formData.name.toLowerCase().replace(' ', '.')}@company.com`,
+      email: formData.email,
       degree: formData.degree,
-      photo: formData.photo || `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face`
+      photo: formData.photo
     };
 
-    onAddEmployee(newEmployee);
-    toast.success(`Employee added successfully! Employee ID: ${employeeId}`);
-    
-    // Reset form
-    setFormData({
-      name: '',
-      position: '',
-      department: '',
-      phone: '',
-      email: '',
-      degree: '',
-      photo: ''
-    });
-    setGeneratedId('');
-    
+    onUpdateEmployee(updatedEmployee);
+    toast.success('Employee updated successfully!');
     onClose();
   };
+
+  if (!employee) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2 text-xl">
-            <UserPlus className="w-6 h-6 text-blue-600" />
-            <span>Add New Employee</span>
+            <Edit className="w-6 h-6 text-blue-600" />
+            <span>Edit Employee - {employee.id}</span>
           </DialogTitle>
         </DialogHeader>
         
@@ -124,7 +120,7 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
                   onChange={handlePhotoUpload}
                   className="cursor-pointer"
                 />
-                <p className="text-xs text-gray-500 mt-1">Upload employee photo (optional)</p>
+                <p className="text-xs text-gray-500 mt-1">Upload new photo (optional)</p>
               </div>
             </div>
           </div>
@@ -185,7 +181,7 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
           {/* Optional Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email (Optional)</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
@@ -194,7 +190,6 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
                 onChange={handleInputChange}
                 placeholder="employee@company.com"
               />
-              <p className="text-xs text-gray-500">Leave empty to auto-generate</p>
             </div>
 
             <div className="space-y-2">
@@ -208,18 +203,6 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
               />
             </div>
           </div>
-
-          {/* Generated Employee ID Display */}
-          {generatedId && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm font-medium text-green-800">
-                Employee ID Generated: <span className="font-bold">{generatedId}</span>
-              </p>
-              <p className="text-xs text-green-600 mt-1">
-                Share this ID with the employee for check-in access
-              </p>
-            </div>
-          )}
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-3 pt-4 border-t">
@@ -235,8 +218,8 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
               type="submit"
               className="px-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
             >
-              <UserPlus className="w-4 h-4 mr-2" />
-              Add Employee
+              <Edit className="w-4 h-4 mr-2" />
+              Update Employee
             </Button>
           </div>
         </form>
@@ -245,4 +228,4 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee }: AddEmployeeModalPr
   );
 };
 
-export default AddEmployeeModal;
+export default EditEmployeeModal;

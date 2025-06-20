@@ -1,13 +1,14 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { LogOut, Users, Clock, TrendingUp, Award, Download, UserPlus } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { LogOut, Users, Clock, TrendingUp, Award, Download, UserPlus, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ThreeBackground from '@/components/ThreeBackground';
 import AddEmployeeModal from '@/components/AddEmployeeModal';
+import EditEmployeeModal from '@/components/EditEmployeeModal';
 import { mockEmployees, initialAttendanceRecords, Employee, AttendanceRecord } from '@/data/mockEmployees';
 
 const AdminDashboard = () => {
@@ -15,6 +16,8 @@ const AdminDashboard = () => {
   const [attendanceRecords] = useState<AttendanceRecord[]>(initialAttendanceRecords);
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
   const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
+  const [isEditEmployeeModalOpen, setIsEditEmployeeModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('adminAuthenticated');
@@ -31,6 +34,21 @@ const AdminDashboard = () => {
 
   const handleAddEmployee = (newEmployee: Employee) => {
     setEmployees(prev => [...prev, newEmployee]);
+  };
+
+  const handleEditEmployee = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setIsEditEmployeeModalOpen(true);
+  };
+
+  const handleUpdateEmployee = (updatedEmployee: Employee) => {
+    setEmployees(prev => prev.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
+    setSelectedEmployee(null);
+  };
+
+  const handleDeleteEmployee = (employeeId: string) => {
+    setEmployees(prev => prev.filter(emp => emp.id !== employeeId));
+    toast.success('Employee deleted successfully');
   };
 
   const getAttendanceRecord = (employeeId: string) => {
@@ -196,6 +214,7 @@ const AdminDashboard = () => {
                     <TableHead>Check In Time</TableHead>
                     <TableHead>Check Out Time</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Options</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -212,7 +231,7 @@ const AdminDashboard = () => {
                             />
                             <div>
                               <p className="font-medium text-gray-900">{employee.name}</p>
-                              <p className="text-sm text-gray-500">{employee.email}</p>
+                              <p className="text-sm text-gray-500">{employee.id}</p>
                             </div>
                           </div>
                         </TableCell>
@@ -231,6 +250,42 @@ const AdminDashboard = () => {
                         <TableCell>
                           {getStatusBadge(attendance?.status || 'absent')}
                         </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEditEmployee(employee)}
+                              className="p-2"
+                            >
+                              <Edit className="w-4 h-4 text-blue-600" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button size="sm" variant="outline" className="p-2">
+                                  <Trash2 className="w-4 h-4 text-red-600" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete Employee</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete {employee.name}? This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleDeleteEmployee(employee.id)}
+                                    className="bg-red-600 hover:bg-red-700"
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -245,6 +300,14 @@ const AdminDashboard = () => {
           isOpen={isAddEmployeeModalOpen}
           onClose={() => setIsAddEmployeeModalOpen(false)}
           onAddEmployee={handleAddEmployee}
+        />
+
+        {/* Edit Employee Modal */}
+        <EditEmployeeModal
+          isOpen={isEditEmployeeModalOpen}
+          onClose={() => setIsEditEmployeeModalOpen(false)}
+          onUpdateEmployee={handleUpdateEmployee}
+          employee={selectedEmployee}
         />
       </div>
     </div>
