@@ -57,7 +57,6 @@ const Index = () => {
             });
             
             const dateString = dateTime.toLocaleDateString('en-IN', {
-                weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
@@ -263,7 +262,6 @@ const Index = () => {
                                 <div className="text-right">
                                     <p className="text-lg font-medium">{liveDate}</p>
                                     <p className="text-base text-gray-500">{liveTime}</p>
-                                    <p className="text-xs text-blue-600 font-medium">Live API Time</p>
                                 </div>
                             </div>
                         </div>
