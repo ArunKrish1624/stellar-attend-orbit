@@ -78,7 +78,8 @@ const Index = () => {
                 timeZone: 'Asia/Kolkata',
                 weekday: 'long',
                 year: 'numeric',
-                month: 'long'
+                month: 'long',
+                day: 'numeric'
             });
             setLiveTime(fallbackTime);
             setLiveDate(fallbackDate);
