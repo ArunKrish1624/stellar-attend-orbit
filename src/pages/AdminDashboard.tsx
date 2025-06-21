@@ -44,6 +44,11 @@ const AdminDashboard = () => {
     setIsEditEmployeeModalOpen(true);
   };
 
+  const handleViewEmployee = (employee: Employee) => {
+    setViewingEmployee(employee);
+    setIsViewEmployeeModalOpen(true);
+  };
+
   const handleUpdateEmployee = (updatedEmployee: Employee) => {
     setEmployees(prev => prev.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp));
     setSelectedEmployee(null);
@@ -213,7 +218,7 @@ const AdminDashboard = () => {
                   <TableRow>
                     <TableHead>Employee</TableHead>
                     <TableHead>Position</TableHead>
-                    <TableHead>Department</TableHead>
+                    <TableHead>Daily Report</TableHead>
                     <TableHead>Check In Time</TableHead>
                     <TableHead>Check Out Time</TableHead>
                     <TableHead>Status</TableHead>
@@ -244,7 +249,17 @@ const AdminDashboard = () => {
                           </div>
                         </TableCell>
                         <TableCell className="font-medium">{employee.position}</TableCell>
-                        <TableCell>{employee.department}</TableCell>
+                        <TableCell>
+                          <div className="max-w-xs">
+                            {attendance?.dailyReport ? (
+                              <p className="text-sm text-gray-700 truncate" title={attendance.dailyReport}>
+                                {attendance.dailyReport}
+                              </p>
+                            ) : (
+                              <span className="text-gray-400 text-sm">No report</span>
+                            )}
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <span className="text-green-600 font-medium">
                             {attendance?.checkInTime || '--:--'}
