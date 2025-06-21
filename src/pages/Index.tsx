@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +24,10 @@ const Index = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCheckingIn, setIsCheckingIn] = useState(true);
     const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>(initialAttendanceRecords);
+    const [liveTime, setLiveTime] = useState<string>('');
+    const [liveDate, setLiveDate] = useState<string>('');
+    const [isLiveTimeActive, setIsLiveTimeActive] = useState(false);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const getIndianTime = () => {
         return new Date().toLocaleTimeString('en-IN', {
@@ -39,6 +43,58 @@ const Index = () => {
             timeZone: 'Asia/Kolkata'
         });
     };
+
+    const fetchLiveTime = async () => {
+        try {
+            const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Kolkata');
+            const data = await response.json();
+            const dateTime = new Date(data.datetime);
+            
+            const timeString = dateTime.toLocaleTimeString('en-IN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            
+            const dateString = dateTime.toLocaleDateString('en-IN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            setLiveTime(timeString);
+            setLiveDate(dateString);
+        } catch (error) {
+            console.error('Failed to fetch live time:', error);
+            toast.error('Failed to fetch live time');
+        }
+    };
+
+    const handleHeaderClick = () => {
+        if (!isLiveTimeActive) {
+            setIsLiveTimeActive(true);
+            fetchLiveTime();
+            intervalRef.current = setInterval(fetchLiveTime, 1000);
+            toast.success('Live time activated!');
+        } else {
+            setIsLiveTimeActive(false);
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+            toast.success('Live time deactivated!');
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, []);
 
     const getTodayDateString = () => {
         return new Date().toLocaleDateString('en-IN', {
@@ -197,11 +253,22 @@ const Index = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-4 text-gray-600">
-                                <Clock className="w-15 h-15" />
+                            <div 
+                                className="flex items-center space-x-4 text-gray-600 cursor-pointer hover:bg-gray-50 rounded-lg p-3 transition-colors"
+                                onClick={handleHeaderClick}
+                                title="Click to toggle live time"
+                            >
+                                <Clock className={`w-5 h-5 ${isLiveTimeActive ? 'text-green-600 animate-pulse' : ''}`} />
                                 <div className="text-right">
-                                    <p className="text-lg font-medium">{getIndianDate()}</p>
-                                    <p className="text-base text-gray-500">{getIndianTime()}</p>
+                                    <p className="text-lg font-medium">
+                                        {isLiveTimeActive ? liveDate : getIndianDate()}
+                                    </p>
+                                    <p className="text-base text-gray-500">
+                                        {isLiveTimeActive ? liveTime : getIndianTime()}
+                                    </p>
+                                    {isLiveTimeActive && (
+                                        <p className="text-xs text-green-600 font-medium">Live API Time</p>
+                                    )}
                                 </div>
                             </div>
                         </div>
