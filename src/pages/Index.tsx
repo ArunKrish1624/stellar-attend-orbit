@@ -76,7 +76,6 @@ const Index = () => {
             });
             const fallbackDate = new Date().toLocaleDateString('en-IN', {
                 timeZone: 'Asia/Kolkata',
-                weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
