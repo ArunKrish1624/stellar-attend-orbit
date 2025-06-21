@@ -27,7 +27,8 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
     dateOfJoined: '',
     salary: '',
     bankAccountNumber: '',
-    increment: '',
+    ifscCode: '',
+    aadharNumber: '',
     workExperience: ''
   });
 
@@ -44,7 +45,8 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
         dateOfJoined: (employee as any).dateOfJoined || '',
         salary: (employee as any).salary || '',
         bankAccountNumber: (employee as any).bankAccountNumber || '',
-        increment: (employee as any).increment || '',
+        ifscCode: (employee as any).ifscCode || '',
+        aadharNumber: (employee as any).aadharNumber || '',
         workExperience: (employee as any).workExperience || ''
       });
     }
@@ -94,7 +96,8 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
       dateOfJoined: formData.dateOfJoined,
       salary: formData.salary,
       bankAccountNumber: formData.bankAccountNumber,
-      increment: formData.increment,
+      ifscCode: formData.ifscCode,
+      aadharNumber: formData.aadharNumber,
       workExperience: formData.workExperience
     } as any;
 
@@ -107,7 +110,7 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2 text-xl">
             <Edit className="w-6 h-6 text-blue-600" />
@@ -219,6 +222,31 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
             </div>
           </div>
 
+          {/* Personal Documents */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="aadharNumber">Aadhar Number</Label>
+              <Input
+                id="aadharNumber"
+                name="aadharNumber"
+                value={formData.aadharNumber}
+                onChange={handleInputChange}
+                placeholder="e.g., 1234 5678 9012"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="workExperience">Work Experience</Label>
+              <Input
+                id="workExperience"
+                name="workExperience"
+                value={formData.workExperience}
+                onChange={handleInputChange}
+                placeholder="e.g., 3 years in software development"
+              />
+            </div>
+          </div>
+
           {/* Employment Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -244,6 +272,7 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
             </div>
           </div>
 
+          {/* Banking Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="bankAccountNumber">Bank Account Number</Label>
@@ -257,26 +286,15 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="increment">Increment</Label>
+              <Label htmlFor="ifscCode">IFSC Code</Label>
               <Input
-                id="increment"
-                name="increment"
-                value={formData.increment}
+                id="ifscCode"
+                name="ifscCode"
+                value={formData.ifscCode}
                 onChange={handleInputChange}
-                placeholder="e.g., 5%"
+                placeholder="e.g., SBIN0001234"
               />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="workExperience">Work Experience</Label>
-            <Input
-              id="workExperience"
-              name="workExperience"
-              value={formData.workExperience}
-              onChange={handleInputChange}
-              placeholder="e.g., 3 years in software development"
-            />
           </div>
 
           {/* Action Buttons */}
