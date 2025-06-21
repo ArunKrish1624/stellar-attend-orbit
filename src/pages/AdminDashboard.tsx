@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,17 @@ import ThreeBackground from '@/components/ThreeBackground';
 import AddEmployeeModal from '@/components/AddEmployeeModal';
 import EditEmployeeModal from '@/components/EditEmployeeModal';
 import ViewEmployeeModal from '@/components/ViewEmployeeModal';
-import { mockEmployees, initialAttendanceRecords, Employee, AttendanceRecord } from '@/data/mockEmployees';
+import { mockEmployees, initialAttendanceRecords, Employee } from '@/data/mockEmployees';
+
+// Updated AttendanceRecord interface to include dailyReport
+interface AttendanceRecord {
+  employeeId: string;
+  checkInTime: string | null;
+  checkOutTime: string | null;
+  status: 'present' | 'absent' | 'checked-out';
+  dailyReport?: string;
+  date: string;
+}
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
