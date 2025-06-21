@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import ThreeBackground from '@/components/ThreeBackground';
 import AddEmployeeModal from '@/components/AddEmployeeModal';
 import EditEmployeeModal from '@/components/EditEmployeeModal';
+import ViewEmployeeModal from '@/components/ViewEmployeeModal';
 import { mockEmployees, initialAttendanceRecords, Employee, AttendanceRecord } from '@/data/mockEmployees';
 
 const AdminDashboard = () => {
@@ -18,6 +19,8 @@ const AdminDashboard = () => {
   const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
   const [isEditEmployeeModalOpen, setIsEditEmployeeModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [isViewEmployeeModalOpen, setIsViewEmployeeModalOpen] = useState(false);
+  const [viewingEmployee, setViewingEmployee] = useState<Employee | null>(null);
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('adminAuthenticated');
@@ -230,7 +233,12 @@ const AdminDashboard = () => {
                               className="w-10 h-10 rounded-full object-cover"
                             />
                             <div>
-                              <p className="font-medium text-gray-900">{employee.name}</p>
+                              <button
+                                onClick={() => handleViewEmployee(employee)}
+                                className="font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                              >
+                                {employee.name}
+                              </button>
                               <p className="text-sm text-gray-500">{employee.id}</p>
                             </div>
                           </div>
@@ -309,6 +317,14 @@ const AdminDashboard = () => {
           onClose={() => setIsEditEmployeeModalOpen(false)}
           onUpdateEmployee={handleUpdateEmployee}
           employee={selectedEmployee}
+        />
+
+        {/* View Employee Modal */}
+        <ViewEmployeeModal
+          isOpen={isViewEmployeeModalOpen}
+          onClose={() => setIsViewEmployeeModalOpen(false)}
+          employee={viewingEmployee}
+          attendanceRecords={attendanceRecords}
         />
       </div>
     </div>

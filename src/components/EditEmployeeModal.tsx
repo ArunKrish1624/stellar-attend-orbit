@@ -23,7 +23,12 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
     phone: '',
     email: '',
     degree: '',
-    photo: ''
+    photo: '',
+    dateOfJoined: '',
+    salary: '',
+    bankAccountNumber: '',
+    increment: '',
+    workExperience: ''
   });
 
   useEffect(() => {
@@ -35,7 +40,12 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
         phone: employee.phone || '',
         email: employee.email,
         degree: employee.degree || '',
-        photo: employee.photo
+        photo: employee.photo,
+        dateOfJoined: (employee as any).dateOfJoined || '',
+        salary: (employee as any).salary || '',
+        bankAccountNumber: (employee as any).bankAccountNumber || '',
+        increment: (employee as any).increment || '',
+        workExperience: (employee as any).workExperience || ''
       });
     }
   }, [employee]);
@@ -80,8 +90,13 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
       phone: formData.phone,
       email: formData.email,
       degree: formData.degree,
-      photo: formData.photo
-    };
+      photo: formData.photo,
+      dateOfJoined: formData.dateOfJoined,
+      salary: formData.salary,
+      bankAccountNumber: formData.bankAccountNumber,
+      increment: formData.increment,
+      workExperience: formData.workExperience
+    } as any;
 
     onUpdateEmployee(updatedEmployee);
     toast.success('Employee updated successfully!');
@@ -92,7 +107,7 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2 text-xl">
             <Edit className="w-6 h-6 text-blue-600" />
@@ -178,7 +193,7 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
             </div>
           </div>
 
-          {/* Optional Fields */}
+          {/* Contact & Education */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -202,6 +217,66 @@ const EditEmployeeModal = ({ isOpen, onClose, onUpdateEmployee, employee }: Edit
                 placeholder="e.g., B.Tech Computer Science"
               />
             </div>
+          </div>
+
+          {/* Employment Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="dateOfJoined">Date of Joined</Label>
+              <Input
+                id="dateOfJoined"
+                name="dateOfJoined"
+                type="date"
+                value={formData.dateOfJoined}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="salary">Salary</Label>
+              <Input
+                id="salary"
+                name="salary"
+                value={formData.salary}
+                onChange={handleInputChange}
+                placeholder="e.g., 50000"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="bankAccountNumber">Bank Account Number</Label>
+              <Input
+                id="bankAccountNumber"
+                name="bankAccountNumber"
+                value={formData.bankAccountNumber}
+                onChange={handleInputChange}
+                placeholder="Enter bank account number"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="increment">Increment</Label>
+              <Input
+                id="increment"
+                name="increment"
+                value={formData.increment}
+                onChange={handleInputChange}
+                placeholder="e.g., 5%"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="workExperience">Work Experience</Label>
+            <Input
+              id="workExperience"
+              name="workExperience"
+              value={formData.workExperience}
+              onChange={handleInputChange}
+              placeholder="e.g., 3 years in software development"
+            />
           </div>
 
           {/* Action Buttons */}
