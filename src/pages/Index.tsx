@@ -28,203 +28,147 @@ const Index = () => {
     const [liveDate, setLiveDate] = useState<string>('');
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    const getIndianTime = () => {
-        return new Date().toLocaleTimeString('en-IN', {
-            timeZone: 'Asia/Kolkata',
+// From this
+  
+// Assume this is inside a React component
+useEffect(() => {
+    fetchLiveTime();
+    intervalRef.current = setInterval(fetchLiveTime, 1000);
+    return () => clearInterval(intervalRef.current);
+}, []);
+
+const fetchLiveTime = async () => {
+    try {
+        const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Kolkata');
+        const data = await response.json();
+        const dateTime = new Date(data.datetime);
+
+        const timeString = dateTime.toLocaleTimeString('en-IN', {
             hour: '2-digit',
             minute: '2-digit',
+            second: '2-digit',
             hour12: true
         });
-    };
 
-    const getIndianDate = () => {
-        return new Date().toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata'
-        });
-    };
-
-    const fetchLiveTime = async () => {
-        try {
-            const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Kolkata');
-            const data = await response.json();
-            const dateTime = new Date(data.datetime);
-            
-            const timeString = dateTime.toLocaleTimeString('en-IN', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
-            
-            const dateString = dateTime.toLocaleDateString('en-IN', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            
-            setLiveTime(timeString);
-            setLiveDate(dateString);
-        } catch (error) {
-            console.error('Failed to fetch live time:', error);
-            // Fallback to local time if API fails
-            const fallbackTime = new Date().toLocaleTimeString('en-IN', {
-                timeZone: 'Asia/Kolkata',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
-            const fallbackDate = new Date().toLocaleDateString('en-IN', {
-                timeZone: 'Asia/Kolkata',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            setLiveTime(fallbackTime);
-            setLiveDate(fallbackDate);
-        }
-    };
-
-    useEffect(() => {
-        // Initial fetch
-        fetchLiveTime();
-        
-        // Set up interval to fetch time every second
-        intervalRef.current = setInterval(fetchLiveTime, 1000);
-
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, []);
-
-    const getTodayDateString = () => {
-        return new Date().toLocaleDateString('en-IN', {
-            timeZone: 'Asia/Kolkata',
+        const dateString = dateTime.toLocaleDateString('en-IN', {
             year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
+            month: 'long',
+            day: 'numeric'
         });
-    };
 
-    const getCurrentIndianHour = () => {
-        const now = new Date();
-        return now.toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit',
-            hour12: false
-        });
-    };
+        setLiveTime(timeString);
+        setLiveDate(dateString);
+    } catch (error) {
+        console.error('Failed to fetch live time:', error);
+    }
+};
 
-    const isCheckInTimeAllowed = () => {
-        const currentHour = parseInt(getCurrentIndianHour());
-        return currentHour >= 9 && currentHour < 15; // 9:00 AM to 2:59 PM (before 3:00 PM)
-    };
+const handleAttendanceAction = (checkIn: boolean) => {
+    if (!employeeId.trim()) {
+        toast.error('Please enter your Employee ID');
+        return;
+    }
 
-    const getCheckInTimeMessage = () => {
-        const currentHour = parseInt(getCurrentIndianHour());
-        if (currentHour < 9) {
-            return 'Check-in will be available from 9:00 AM';
-        } else if (currentHour >= 15) {
-            return 'Check-in time has ended (available only till 3:00 PM)';
+    const employee = mockEmployees.find(emp => emp.id === employeeId.toUpperCase());
+    if (!employee) {
+        toast.error('Employee not found. Please check your ID.');
+        return;
+    }
+
+    // Use API-based hour check
+    const currentHour = parseInt(liveTime.split(':')[0]);
+    const isAm = liveTime.toLowerCase().includes('am');
+    const hour24 = isAm ? (currentHour === 12 ? 0 : currentHour) : (currentHour === 12 ? 12 : currentHour + 12);
+
+    if (checkIn) {
+        if (hour24 < 9) {
+            toast.error('Check-in will be available from 9:00 AM');
+            return;
         }
-        return '';
-    };
-
-    const handleAttendanceAction = (checkIn: boolean) => {
-        if (!employeeId.trim()) {
-            toast.error('Please enter your Employee ID');
+        if (hour24 >= 15) {
+            toast.error('Check-in time has ended (available only till 3:00 PM)');
             return;
         }
 
-        const employee = mockEmployees.find(emp => emp.id === employeeId.toUpperCase());
-        if (!employee) {
-            toast.error('Employee not found. Please check your ID.');
-            return;
-        }
-
-        const todayDate = getTodayDateString();
+        const todayDate = liveDate;
         const existingRecord = attendanceRecords.find(record =>
             record.employeeId === employee.id && record.date === todayDate
         );
 
-        if (checkIn) {
-            // Check if check-in time is allowed
-            if (!isCheckInTimeAllowed()) {
-                const timeMessage = getCheckInTimeMessage();
-                toast.error(timeMessage);
-                return;
-            }
+        if (existingRecord && (existingRecord.status === 'present' || existingRecord.status === 'checked-out')) {
+            toast.error('You have already checked in today! Only one check-in per day is allowed.');
+            return;
+        }
+    } else {
+        const todayDate = liveDate;
+        const existingRecord = attendanceRecords.find(record =>
+            record.employeeId === employee.id && record.date === todayDate
+        );
 
-            // Check if already checked in today
-            if (existingRecord && (existingRecord.status === 'present' || existingRecord.status === 'checked-out')) {
-                toast.error('You have already checked in today! Only one check-in per day is allowed.');
-                return;
+        if (!existingRecord || existingRecord.status !== 'present') {
+            toast.error('You need to check in first!');
+            return;
+        }
+    }
+
+    setSelectedEmployee(employee);
+    setIsCheckingIn(checkIn);
+    setIsModalOpen(true);
+};
+
+const confirmAttendance = (dailyReport?: string) => {
+    if (!selectedEmployee) return;
+
+    const currentTime = liveTime;
+    const todayDate = liveDate;
+
+    setAttendanceRecords(prev => {
+        const existingIndex = prev.findIndex(record =>
+            record.employeeId === selectedEmployee.id && record.date === todayDate
+        );
+
+        if (isCheckingIn) {
+            const newRecord: AttendanceRecord = {
+                employeeId: selectedEmployee.id,
+                checkInTime: currentTime,
+                checkOutTime: null,
+                status: 'present',
+                date: todayDate
+            };
+
+            if (existingIndex >= 0) {
+                const updated = [...prev];
+                updated[existingIndex] = newRecord;
+                return updated;
+            } else {
+                return [...prev, newRecord];
             }
         } else {
-            if (!existingRecord || existingRecord.status !== 'present') {
-                toast.error('You need to check in first!');
-                return;
+            // Check out with daily report
+            if (existingIndex >= 0) {
+                const updated = [...prev];
+                updated[existingIndex] = {
+                    ...updated[existingIndex],
+                    checkOutTime: currentTime,
+                    status: 'checked-out',
+                    dailyReport: dailyReport
+                };
+                return updated;
             }
         }
 
-        setSelectedEmployee(employee);
-        setIsCheckingIn(checkIn);
-        setIsModalOpen(true);
-    };
+        return prev;
+    });
 
-    const confirmAttendance = (dailyReport?: string) => {
-        if (!selectedEmployee) return;
+    toast.success(`Successfully ${isCheckingIn ? 'checked in' : 'checked out'}!`);
+    setIsModalOpen(false);
+    setSelectedEmployee(null);
+    setEmployeeId('');
+};
 
-        const currentTime = getIndianTime();
-        const todayDate = getTodayDateString();
-
-        setAttendanceRecords(prev => {
-            const existingIndex = prev.findIndex(record =>
-                record.employeeId === selectedEmployee.id && record.date === todayDate
-            );
-
-            if (isCheckingIn) {
-                const newRecord: AttendanceRecord = {
-                    employeeId: selectedEmployee.id,
-                    checkInTime: currentTime,
-                    checkOutTime: null,
-                    status: 'present',
-                    date: todayDate
-                };
-
-                if (existingIndex >= 0) {
-                    const updated = [...prev];
-                    updated[existingIndex] = newRecord;
-                    return updated;
-                } else {
-                    return [...prev, newRecord];
-                }
-            } else {
-                // Check out with daily report
-                if (existingIndex >= 0) {
-                    const updated = [...prev];
-                    updated[existingIndex] = {
-                        ...updated[existingIndex],
-                        checkOutTime: currentTime,
-                        status: 'checked-out',
-                        dailyReport: dailyReport
-                    };
-                    return updated;
-                }
-            }
-
-            return prev;
-        });
-
-        toast.success(`Successfully ${isCheckingIn ? 'checked in' : 'checked out'}!`);
-        setIsModalOpen(false);
-        setSelectedEmployee(null);
-        setEmployeeId('');
-    };
-
-    const handleQuickCheckOut = (employeeId: string) => {
+  // To This
+  
+  const handleQuickCheckOut = (employeeId: string) => {
         const employee = mockEmployees.find(emp => emp.id === employeeId);
         if (employee) {
             setSelectedEmployee(employee);
