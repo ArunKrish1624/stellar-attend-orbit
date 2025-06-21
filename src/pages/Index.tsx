@@ -29,8 +29,7 @@ const Index = () => {
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
 // From this
-  
-onst getIndianTime = () => {
+  const getIndianTime = () => {
         return new Date().toLocaleTimeString('en-IN', {
             timeZone: 'Asia/Kolkata',
             hour: '2-digit',
